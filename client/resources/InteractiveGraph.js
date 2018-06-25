@@ -412,7 +412,16 @@ define([
                     return 4000;
                 }
             };
- 
+
+            //\definecolor{gene-color}{HTML}{FFA19E}
+            //\definecolor{region-color}{HTML}{FFCDAD}
+            //\definecolor{site-color}{HTML}{FFFDC2}
+            //\definecolor{residue-color}{HTML}{E4D6FF}
+            //\definecolor{state-color}{HTML}{A3DEFF}
+            //\definecolor{bnd-color}{HTML}{9EFFC5}
+            //\definecolor{mod-color}{HTML}{9DAEFD}
+            //\definecolor{edge-color}{HTML}{B8B8B8}
+
             var node_to_color = function (n) {
                 let ancestor = ancestorArray[n.id];
                 if (ancestor == "state") {
@@ -422,10 +431,10 @@ define([
                         if (stateTest == "false") { 
                             return "gray"; // gray
                         } else {
-                            return "#FFD33D"; // yellow
+                            return "#A3DEFF"; // yellow
                         }
                     } else {
-                        return "#FFD33D"; // yellow
+                        return "#A3DEFF"; // yellow
                     }
                 } else if (ancestor == "bnd") {
                     bndTestChk = n.attrs.test
@@ -434,10 +443,10 @@ define([
                         if (bndTest == "false") { 
                             return "#E63234"; // red
                         } else { 
-                            return "#82A532"; // green 
+                            return "#9EFFC5"; // green 
                         }
                     } else { 
-                        return "#82A532"; // green
+                        return "#9EFFC5"; // green
                     }
                  } else if (ancestor == "mod") {
                     modValsChk = n.attrs.value
@@ -446,22 +455,72 @@ define([
                         if (modVals == "false") { 
                             return "gray"; // gray
                         } else {
-                            return "#3399ff"; // blue
+                            return "#9DAEFD"; // blue
                         }
                     } else {
-                        return "#3399ff"; // blu
+                        return "#9DAEFD"; // blue
                     }              
                 } else {                
                     return ({
-                        "gene":    "#AB7372",
-                        "region":  "#DA8C8A", // "#AB8472",
-                        "site":    "#EC928F",
-                        "residue": "#FF9E9B", // "#94716A",
+                        "gene":    "#FFA19E",
+                        "region":  "#FFCDAD", // "#AB8472",
+                        "site":    "#FFFDC2",
+                        "residue": "#E4D6FF", // "#94716A",
                         "syn":     "#55A485",
                         "deg":     "#8C501E" // "#A47066",
                     }[ancestor]);
                 }
             };
+
+            //var node_to_color = function (n) {
+            //    let ancestor = ancestorArray[n.id];
+            //    if (ancestor == "state") {
+            //        stateTestChk = n.attrs.test
+            //        if (stateTestChk != null) {
+            //            stateTest = n.attrs.test.strSet.pos_list;
+            //            if (stateTest == "false") { 
+            //                return "gray"; // gray
+            //            } else {
+            //                return "#FFD33D"; // yellow
+            //            }
+            //        } else {
+            //            return "#FFD33D"; // yellow
+            //        }
+            //    } else if (ancestor == "bnd") {
+            //        bndTestChk = n.attrs.test
+            //        if (bndTestChk != null) {
+            //            bndTest = n.attrs.test.strSet.pos_list;
+            //            if (bndTest == "false") { 
+            //                return "#E63234"; // red
+            //            } else { 
+            //                return "#82A532"; // green 
+            //            }
+            //        } else { 
+            //            return "#82A532"; // green
+            //        }
+            //     } else if (ancestor == "mod") {
+            //        modValsChk = n.attrs.value
+            //        if (modValsChk != null) {
+            //            modVals = n.attrs.value.strSet.pos_list;
+            //            if (modVals == "false") { 
+            //                return "gray"; // gray
+            //            } else {
+            //                return "#3399ff"; // blue
+            //            }
+            //        } else {
+            //            return "#3399ff"; // blu
+            //        }              
+            //    } else {                
+            //        return ({
+            //            "gene":    "#AB7372",
+            //            "region":  "#DA8C8A", // "#AB8472",
+            //            "site":    "#EC928F",
+            //            "residue": "#FF9E9B", // "#94716A",
+            //            "syn":     "#55A485",
+            //            "deg":     "#8C501E" // "#A47066",
+            //        }[ancestor]);
+            //    }
+            //};
 
             var link_to_dotStyle = function (l) {
                 var ancestorSource = ancestorArray[l.source.id];
@@ -1074,6 +1133,12 @@ define([
                     .classed("detailclicked", function (d) {
                         return !(d3.select(this).classed("detailclicked"));
                     });
+                if (svg.selectAll(".detailclicked").empty()) {
+                    svg.selectAll(".contact").style("visibility", "visible");
+                }
+                else {
+                    svg.selectAll(".contact").style("visibility", "hidden");
+                }
                 // Find the subgraphs of all the detailclicked nodes.
                 to_show = [];
                 svg.selectAll(".detailclicked").each(function (nod) {
@@ -2161,7 +2226,7 @@ define([
 	    svg.selectAll(".node").classed("lowlighted", false);
 	    svg.selectAll(".link").classed("highlighted", false);
             svg.selectAll(".link").classed("lowlighted", false);
-            svg.selectAll(".contact").style("visibility", "visible");
+            //svg.selectAll(".contact").style("visibility", "visible");
         }
 
         function highlightNodes(to_highlight, clicked_id) {
@@ -2243,10 +2308,10 @@ define([
             simulation.restart();
             link.exit().remove();
             // Hide all the contacts that involve the clicked gene.
-            svg.selectAll(".contact").style("visibility", function (d) {
-                if (to_show(d.source.id) == true && to_show(d.target.id) == true) {return "hidden"}
-                else {return "visible"};
-            });
+            //svg.selectAll(".contact").style("visibility", function (d) {
+            //    if (to_show(d.source.id) == true && to_show(d.target.id) == true) {return "hidden"}
+            //    else {return "visible"};
+            //});
         }
 
         function newChild() {
