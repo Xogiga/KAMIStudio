@@ -197,7 +197,7 @@ define([
                                 d3.select("#top_menu").append("div")
                                     .attr("id", "is_tooltip")
                                     .style("visibility", "hidden")
-                                    .text("shortcut: i");
+                                    .text("shortcut: b");
                                 d3.select("#is_chkbx")
                                     .on("mouseover", function() {
                                         d3.select("#is_tooltip").transition()

@@ -2478,7 +2478,7 @@ define([
                         d3.select("#do_chkbx").property("checked", false);
                     }
                 }
-                else if (d3.event.keyCode === 73) {
+                else if (d3.event.keyCode === 66) {
                     chk_state = d3.select("#is_chkbx").property("checked");
                     if (chk_state == false) {
                         d3.select("#is_chkbx").property("checked", true);
