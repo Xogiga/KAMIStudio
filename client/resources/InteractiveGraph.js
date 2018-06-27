@@ -854,6 +854,11 @@ define([
                 }
             }
             edgesList = links;
+            // Copy links to a new object that won't get overwritten when
+            // showing nugget preview.
+            if (path == "/kami_base/kami/action_graph") {
+                ag_links = links;
+            }
 
 
             //add all links as line in the svg
@@ -1023,13 +1028,19 @@ define([
             var simple_contact_edges = [];
             for (var key in cnct_nodes) {
                 var gene_list = cnct_nodes[key];
-                if (gene_list.length == 2) {
+                var gene_set = [];
+                for (var i = 0; i < gene_list.length; i++) {
+                    if (gene_set.includes(gene_list[i]) == false) {
+                        gene_set.push(gene_list[i])
+                    }
+                }
+                if (gene_set.length == 2) {
                     // Select example edges coming from the desired gene.
                     var cnct_source = all_contact_edges.filter((edg) =>
-                        edg.source.id === gene_list[0])[0].source;
+                        edg.source.id === gene_set[0])[0].source;
                     // Select example edges going to the desired gene.
                     var cnct_target = all_contact_edges.filter((edg) =>
-                        edg.source.id === gene_list[1])[0].source;
+                        edg.source.id === gene_set[1])[0].source;
                     var simple_contact = {};
                     simple_contact["source"] = cnct_source;
                     simple_contact["target"] = cnct_target;
@@ -2299,7 +2310,7 @@ define([
             //    if (to_show(d.source.id) == true && to_show(d.target.id) == true) {return "visible"}
             //    else {return "hidden"};
             //});
-            var links_to_draw = links.filter((d) => (to_show(d.source.id) == true && to_show(d.target.id) == true));
+            var links_to_draw = ag_links.filter((d) => (to_show(d.source.id) == true && to_show(d.target.id) == true));
             var link = svg_content.selectAll(".link")
                     .data(links_to_draw, function (d) { return d.source.id + "-" + d.target.id; });
             link.enter().append("path").classed("link", true)

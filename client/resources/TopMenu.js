@@ -73,7 +73,7 @@ define([
                                     .attr("for", "detail_chkbx")
                                     .attr("id", "detail_chkbx_lbl");
                                 document.getElementById("detail_chkbx_lbl")
-                                    .innerHTML = "Show Details:";
+                                    .innerHTML = "Show All Nodes:";
 
                                 // Ensure that only one checkbox per group 
                                 // can be checked at a time. I do that instead
