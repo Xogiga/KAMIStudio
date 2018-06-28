@@ -1080,9 +1080,6 @@ define([
                 .on("contextmenu", nodeContextMenuHandler);
 
             svg_content.selectAll("g.node").each(function (d) { if (d.type) d3.select(this).classed(d.type, true) });
-            if (path == "/kami_base/kami/action_graph") {
-                showDetails();
-            }
             if (config.repDispatch) { config.repDispatch.call("loadingEnded") }
 
             //add selection rectangle
@@ -1137,18 +1134,23 @@ define([
                 .style("fill", shapeClassifier.nodeColor)
                 .on("dblclick", callDetails);
 
+
             function callDetails(clicked_node) {
                 // Find if that node was already clicked for details. If it wasn't,
                 // mark it as clicked. If it was, mark is as not clicked.
                 svg.selectAll(".nodeSymbol").filter((nod) => nod.id === clicked_node.id)
                     .classed("detailclicked", function (d) {
                         return !(d3.select(this).classed("detailclicked"));
-                    });
+                    })
                 if (svg.selectAll(".detailclicked").empty()) {
                     svg.selectAll(".contact").style("visibility", "visible");
+                    svg.selectAll(".gene").selectAll(".nodeSymbol").attr("d", d3.symbol().size(120000));
+                    d3.selectAll(".gene").selectAll(".nodeLabel").attr("font-size", function () { return (radius*3) + "px" })
                 }
                 else {
                     svg.selectAll(".contact").style("visibility", "hidden");
+                    svg.selectAll(".gene").selectAll(".nodeSymbol").attr("d", d3.symbol().size(6000));
+                    d3.selectAll(".gene").selectAll(".nodeLabel").attr("font-size", function () { return (radius / 2) + "px" })
                 }
                 // Find the subgraphs of all the detailclicked nodes.
                 to_show = [];
@@ -1263,6 +1265,9 @@ define([
                         .attr("vy", 0);
                 });
             });
+            if (path == "/kami_base/kami/action_graph") {
+                showDetails();
+            }
             simulation.restart();
             // console.log("sim",simulation.force("link"));
             // console.log("sim",simulation.force("center"));
@@ -2220,6 +2225,8 @@ define([
                 d3.selectAll(".mod").style("visibility", "visible")
                 d3.selectAll(".bnd").style("visibility", "visible")
                 d3.selectAll(".link").style("visibility", "visible")
+                d3.selectAll(".gene").selectAll(".nodeSymbol").attr("d", d3.symbol().size(6000))
+                d3.selectAll(".gene").selectAll(".nodeLabel").attr("font-size", function () { return (radius / 2) + "px" })
             } else {
                 d3.selectAll(".contact").style("visibility", "visible")
                 d3.selectAll(".region").style("visibility", "hidden")
@@ -2229,6 +2236,8 @@ define([
                 d3.selectAll(".mod").style("visibility", "hidden")
                 d3.selectAll(".bnd").style("visibility", "hidden")
                 d3.selectAll(".link").style("visibility", "hidden")
+                d3.selectAll(".gene").selectAll(".nodeSymbol").attr("d", d3.symbol().size(120000));
+                d3.selectAll(".gene").selectAll(".nodeLabel").attr("font-size", function () { return (radius*3) + "px" })
             }
         }
 
@@ -2237,7 +2246,9 @@ define([
 	    svg.selectAll(".node").classed("lowlighted", false);
 	    svg.selectAll(".link").classed("highlighted", false);
             svg.selectAll(".link").classed("lowlighted", false);
-            //svg.selectAll(".contact").style("visibility", "visible");
+            if (svg.selectAll(".detailclicked").empty()) {
+                svg.selectAll(".contact").style("visibility", "visible");
+            }
         }
 
         function highlightNodes(to_highlight, clicked_id) {
@@ -2253,13 +2264,21 @@ define([
             svg.selectAll(".link").classed("lowlighted", function (d) {
                 return !to_highlight(d.source.id) || !to_highlight(d.target.id)
             });
+            // Gather the ids of the that that their details shown. We should not
+            // show contacts for these nodes.
+            var detailed_nodes = [];
+            svg.selectAll(".detailclicked").each(function (d) { detailed_nodes.push(d.id) })
             svg.selectAll(".contact").style("visibility", function (d) {
-                //return !(clicked_id == d.source.id) && !(clicked_id == d.target.id)
                 if (!(clicked_id == d.source.id) && !(clicked_id == d.target.id)) {
                     return "hidden";
                 }
                 else {
-                    return "visible";
+                    if (detailed_nodes.includes(d.source.id) || detailed_nodes.includes(d.target.id)) {
+                        return "hidden";
+                    }
+                    else {
+                        return "visible";
+                    }
                 }
             });
         }
@@ -2528,6 +2547,13 @@ define([
                         }
                         showDetails();
                     }
+                }
+                else if (d3.event.keyCode === 67 && !d3.event.ctrlKey) {
+                    // Clear all details when pressing c. This shortcut still
+                    // has no equivalent clickble icon.
+                    // It is like a secret button...
+                    svg.selectAll(".nodeSymbol").classed("detailclicked", false);
+                    showDetails();
                 } 
             }
         }

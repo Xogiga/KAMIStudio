@@ -260,6 +260,7 @@ define([
 			}());
 		}
                 function clickDetails() {
+                    var radius = 30;
                     if (d3.select("#detail_chkbx").property("checked") == true) {
                         d3.selectAll(".contact").style("visibility", "hidden")
                         d3.selectAll(".region").style("visibility", "visible")
@@ -269,6 +270,8 @@ define([
                         d3.selectAll(".mod").style("visibility", "visible")
                         d3.selectAll(".bnd").style("visibility", "visible")
                         d3.selectAll(".link").style("visibility", "visible")
+                        d3.selectAll(".gene").selectAll(".nodeSymbol").attr("d", d3.symbol().size(6000))
+                        d3.selectAll(".gene").selectAll(".nodeLabel").attr("font-size", function () { return (radius / 2) + "px" })
                     } else {
                         d3.selectAll(".contact").style("visibility", "visible")
                         d3.selectAll(".region").style("visibility", "hidden")
@@ -278,6 +281,8 @@ define([
                         d3.selectAll(".mod").style("visibility", "hidden")
                         d3.selectAll(".bnd").style("visibility", "hidden")
                         d3.selectAll(".link").style("visibility", "hidden")
+                        d3.selectAll(".gene").selectAll(".nodeSymbol").attr("d", d3.symbol().size(120000))
+                        d3.selectAll(".gene").selectAll(".nodeLabel").attr("font-size", function () { return (radius*3) + "px" })
                     }
                 }
 	});
