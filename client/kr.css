@@ -747,7 +747,7 @@ svg{
     position: absolute;
     /*right: 53.4%; 48vw;*/
     left: 20%;
-    bottom: 0%; /*0vh;*/
+    top: 42px; /*0vh;*/
     border: solid 2px var(--separation-line-color);
     background:rgba(230, 250, 255, 0.9);
     opacity: 1;
